@@ -4,10 +4,6 @@ import sys
 from bs4 import BeautifulSoup
 from bs4.element import Comment
 
-DEFAULT_URL = "https://stackoverflow.com"
-URL = sys.argv[1] if (len(sys.argv) > 1) else DEFAULT_URL
-WORDS_TO_PRINT = 10
-
 noise_words = set({'ourselves', 'hers', 'between', 'yourself', 'again',
 				  'there', 'about', 'once', 'during', 'out', 'very', 'having',
 				  'with', 'they', 'own', 'an', 'be', 'some', 'for', 'do', 'its',
@@ -57,7 +53,6 @@ def preprocess(string):
 	# print(final_processed_string_list)
 	return final_processed_string_list
 
-
 # From https://stackoverflow.com/questions/1936466/beautifulsoup-grab-visible-webpage-text
 def tag_visible(element):
     if element.parent.name in ['style', 'script', 'head', 'title', 'meta', '[document]']:
@@ -74,7 +69,13 @@ def text_from_html(body):
     # Trim visible_texts off empty strings and return as a list rather than as a filter iterable.
     return list(filter(None, [t.strip() for t in visible_texts])) 
 
+
 if __name__ == "__main__":
+
+	DEFAULT_URL = "https://stackoverflow.com"
+	URL = sys.argv[1] if (len(sys.argv) > 1) else DEFAULT_URL
+	WORDS_TO_PRINT = 10
+
     page = requests.get(URL)
     visible_text = text_from_html(page.content)
 
