@@ -1,5 +1,3 @@
-import re
-import requests
 import sys
 from .keyworder import Keyworder
 
