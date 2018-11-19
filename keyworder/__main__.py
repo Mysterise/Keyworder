@@ -4,7 +4,6 @@ import sys
 from .keyworder import Keyworder
 
 def main():
-	DEFAULT_URL = "https://stackoverflow.com"
 	URL = sys.argv[1] if (len(sys.argv) > 1) else DEFAULT_URL
 	words_to_print = 10
 
