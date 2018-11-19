@@ -10,7 +10,7 @@ def tag_visible(element):
     return True
 
 # Grab visible text from an html body
-def text_from_html(body):
+def visible_text_from_html(body):
     soup = BeautifulSoup(body, 'html.parser')
     texts = soup.findAll(text=True)
     visible_texts = filter(tag_visible, texts)
