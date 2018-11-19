@@ -2,7 +2,7 @@ import sys
 from .keyworder import Keyworder
 
 def main():
-	URL = None
+	URL = "https://stackoverflow.com"
 	words_to_print = 10
 
 	if (len(sys.argv) > 1):
