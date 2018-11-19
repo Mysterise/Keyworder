@@ -4,7 +4,7 @@ import sys
 from preprocess import text_from_html
 from filter import preprocess
 
-if __name__ == "__main__":
+def main():
 	DEFAULT_URL = "https://stackoverflow.com"
 	URL = sys.argv[1] if (len(sys.argv) > 1) else DEFAULT_URL
 	words_to_print = 10
@@ -33,3 +33,6 @@ if __name__ == "__main__":
 		printed_words_count += 1
 		if (printed_words_count >= words_to_print):
 			break
+
+if __name__ == "__main__":
+	main()
