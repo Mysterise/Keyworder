@@ -26,9 +26,10 @@ if __name__ == "__main__":
 			word_count[word] += 1
 
 	# Output the top words_to_print
+	print(str(len(word_count)) + " visible unique keywords in " + str(URL))
 	printed_words_count = 0
 	for word in sorted(word_count, key=word_count.get, reverse=True):
-		print(word, word_count[word])
+		print(printed_words_count, word_count[word], word)
 		printed_words_count += 1
 		if (printed_words_count >= words_to_print):
 			break
