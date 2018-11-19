@@ -1,8 +1,8 @@
 import re
 import requests
 import sys
-from preprocess import text_from_html
-from filter import preprocess
+from .preprocess import text_from_html
+from .filter import filter_string_for_keywords
 
 def main():
 	DEFAULT_URL = "https://stackoverflow.com"
@@ -15,7 +15,7 @@ def main():
     # Build a collection of standalone words through preprocessing the visible_text
 	word_collection = []
 	for sentence in visible_text:
-		word_collection.extend(preprocess(sentence))
+		word_collection.extend(filter_string_for_keywords(sentence))
 
 	# Count the occurence of each word and store it into a dict
 	word_count = {}

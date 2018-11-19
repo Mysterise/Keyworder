@@ -1,9 +1,9 @@
 import re
-from stop_words import NLTK_stop_words
+from .stop_words import NLTK_stop_words
 
-def preprocess(string, stop_words=NLTK_stop_words):
+def filter_string_for_keywords(string, stop_words=NLTK_stop_words):
     """
-    Apply preprocessing to a single string. 
+    Filter a string to extract only keywords.
         - removing stop words
         - stripping/adding punctuation
         - changing case
@@ -11,19 +11,19 @@ def preprocess(string, stop_words=NLTK_stop_words):
     RETURN: the preprocessed string in list form.
     """
 
-    processed_string = string.lower()
+    filtered_string = string.lower()
 
     # Removing noise
-    processed_string = re.sub(r"<[^>]*>", "", processed_string)     # Removing any HTML tags
-    processed_string = re.sub(r"\d+", "", processed_string)         # Removing all digits
-    processed_string = re.sub(r"\"", "", processed_string)          # Replacing apostrophe with null
-    processed_string = re.sub(r"\W", " ", processed_string)         # Removing all non alpha-numeric words
-    processed_string = re.sub(r"\s+", " ", processed_string)        # Trimming multiple whitespaces
+    filtered_string = re.sub(r"<[^>]*>", "", filtered_string)     # Removing any HTML tags
+    filtered_string = re.sub(r"\d+", "", filtered_string)         # Removing all digits
+    filtered_string = re.sub(r"\"", "", filtered_string)          # Replacing apostrophe with null
+    filtered_string = re.sub(r"\W", " ", filtered_string)         # Removing all non alpha-numeric words
+    filtered_string = re.sub(r"\s+", " ", filtered_string)        # Trimming multiple whitespaces
 
     # Removing noise words
-    processed_string_list = processed_string.split()
-    final_processed_string_list = [word for word in processed_string_list if word not in stop_words]
-    # processed_string = " ".join(final_processed_string_list)
+    filtered_string_list = filtered_string.split()
+    final_filtered_string_list = [word for word in filtered_string_list if word not in stop_words]
+    # filtered_string = " ".join(final_filtered_string_list)
 
-    # print(final_processed_string_list)
-    return final_processed_string_list
+    # print(final_filtered_string_list)
+    return final_filtered_string_list
