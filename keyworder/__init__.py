@@ -1,3 +1,3 @@
-from .keyworder import Keyworder
+from .keyworder import Keyworder, nltk_stoplist
 
-__all__ = ['Keyworder']
+__all__ = ['Keyworder', 'nltk_stoplist']
