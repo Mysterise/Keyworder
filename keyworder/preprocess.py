@@ -68,7 +68,7 @@ def build_stop_word_regex(stop_word_list):
         stop_word_regex_list.append(word_regex)
     return re.compile('(?u)' + '|'.join(stop_word_regex_list), re.IGNORECASE)
 
-def generate_candidate_keywords_from_regex(sentence_list, regex, min_characters=1, max_words=4):
+def generate_candidate_keywords_from_regex(sentence_list, regex, min_characters=1, max_words=10):
     """ Generates a list of keywords given regex as delimiters. """
     keyword_list = []
     for s in sentence_list:

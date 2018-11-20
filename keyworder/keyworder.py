@@ -37,16 +37,16 @@ class Keyworder:
     
     def extract_keywords_from_url(self, url):
         """
-        Given a url source, extracts keywords from visible text in the url using the defined stop_words.
+        Given a url source, extracts keywords from visible text in the url using the defined stop_words as regex.
 
-        @param url String of the url to be scraped
-        @return list List of sentences
+        @param url String of the url to be scraped to have keywords extracted from.
+        @return list List of keywords
         """
         try:
             if not validate_url(url):
-                raise ValueError()
-        except ValueError:
-            print("Invalid URL '" + url + "'")
+                raise TypeError()
+        except TypeError:
+            print("extract_keywords_from_url(url): Invalid URL '" + url + "'")
             return None
 
         self.source = url
@@ -57,11 +57,24 @@ class Keyworder:
         return candidate_keywords
     
     def extract_keywords_from_text(self, text):
+        """
+        Given a text piece as a string, extracts keywords from sentences in the text using the defined stop_words as regex.
+
+        @param text String of the text to be split into sentences to have keywords extracted from.
+        @return list List of keywords
+        """
         regex = build_stop_word_regex(self.stop_words)
         candidate_keywords = generate_candidate_keywords_from_regex(sent_tokenize(text), regex) 
         return candidate_keywords
 
     def calculate_word_scores(self, candidate_keywords):
+        """
+        Calculate word scores as defined by the formula: score(w) = deg(w)/frew(w)
+        Words are stored in a dict mapping words => score(word).
+
+        @param candidate_keywords List of keywords to have scores calculated for.
+        @return dict Dictionary mapping words => score(word)
+        """
         word_frequency = {}
         word_degree = {}
         for keyword in candidate_keywords:
@@ -76,14 +89,22 @@ class Keyworder:
         for item in word_frequency:
             word_degree[item] = word_degree[item] + word_frequency[item]
 
-        # Calculate Word scores = deg(w)/frew(w)
+        # Calculate word_scores[w] = deg(w)/frew(w)
         word_scores = {}
         for item in word_frequency:
             word_scores.setdefault(item, 0)
             word_scores[item] = word_degree[item] / (word_frequency[item] * 1.0)
         return word_scores
 
-    def generate_candidate_keyword_scores(self, candidate_keywords, word_scores, min_frequency=1):
+    def generate_candidate_keyword_scores(self, candidate_keywords, word_scores, min_frequency=0):
+        """
+        Given a list of candidate_keywords and their word => score mappings, aggregates the total word_score for each candidate_keyword.
+
+        @param candidate_keywords List of candidate_keywords to be calculated
+        @param word_scores Dictionary of the individual words in all the candidate_keywords mapping to their respective scores
+        @param min_frequency The minimum frequency for a keyword's appearance in the candidate_keywords to be considered for score aggregation.
+        @return dict Dictionary mapping each candidate_keywords to their aggregate word scores
+        """
         candidate_keyword_scores = {}
         for keyword in candidate_keywords:
             if candidate_keywords.count(keyword) >= min_frequency:
@@ -96,6 +117,14 @@ class Keyworder:
         return candidate_keyword_scores
 
     def top_keyword_scores(self, candidate_keywords, num=10, min_frequency=1):
+        """
+        Given a list of candidate_keywords, calculates the candidate_keyword_scores and returns the top (num) candidate_keywords sorted by their scores.
+
+        @param candidate_keywords List of candidate_keywords to be calculated
+        @param num Integer value representing the top (num) amount of keywords and their scores to be returned.
+        @param min_frequency The minimum frequency for a keyword's appearance in the candidate_keywords to be considered for score aggregation.
+        @return list<tuple> List of tuples containing (candidate_keyword_score, candidate_keyword)
+        """
         word_scores = self.calculate_word_scores(candidate_keywords)
         keyword_scores = self.generate_candidate_keyword_scores(candidate_keywords, word_scores, min_frequency)
 
@@ -107,33 +136,33 @@ class Keyworder:
             if (count >= num): break
         return top_keyword_scores_list
         
-    def top_freq_keywords(self, keyword_list, lines=10, log=False):
-        # Output the top keywords
-        keyword_count = self.__count_keywords(keyword_list)
-        if (log):
-            print("Top keywords from " + self.source)
-            print("%4s %5s %15s" % ("Rank", "Freq", "Keyword"))
+    # def top_freq_keywords(self, keyword_list, lines=10, log=False):
+    #     # Output the top keywords
+    #     keyword_count = self.__count_keywords(keyword_list)
+    #     if (log):
+    #         print("Top keywords from " + self.source)
+    #         print("%4s %5s %15s" % ("Rank", "Freq", "Keyword"))
 
-        print_count = 1
-        total_keywords = 0
-        for keyword in sorted(keyword_count, key=keyword_count.get, reverse=True):
-            if(log): print("%4d %5d %15s" % (print_count, keyword_count[keyword], keyword))
+    #     print_count = 1
+    #     total_keywords = 0
+    #     for keyword in sorted(keyword_count, key=keyword_count.get, reverse=True):
+    #         if(log): print("%4d %5d %15s" % (print_count, keyword_count[keyword], keyword))
             
-            print_count += 1
-            total_keywords += keyword_count[keyword]
-            if (print_count > lines): break
+    #         print_count += 1
+    #         total_keywords += keyword_count[keyword]
+    #         if (print_count > lines): break
 
-        if (log): print("%5d total keywords, %5d unique keywords" % (total_keywords, len(keyword_count)))
+    #     if (log): print("%5d total keywords, %5d unique keywords" % (total_keywords, len(keyword_count)))
     
-    def __count_keywords(self, keyword_list):
-        # Count the occurence of each keyword and store it into a dict
-        keyword_count = {}
-        for keyword in keyword_list:
-            if not keyword in keyword_count:
-                keyword_count[keyword] = 1
-            else:
-                keyword_count[keyword] += 1
-        return keyword_count
+    # def __count_keywords(self, keyword_list):
+    #     # Count the occurence of each keyword and store it into a dict
+    #     keyword_count = {}
+    #     for keyword in keyword_list:
+    #         if not keyword in keyword_count:
+    #             keyword_count[keyword] = 1
+    #         else:
+    #             keyword_count[keyword] += 1
+    #     return keyword_count
 
     # def set_url(self, new_url):
     #     self.url = new_url
