@@ -1,8 +1,7 @@
 import re
 import requests
 import sys
-from .preprocess import visible_text_from_html
-from .filter import filter_string_for_keywords
+from .preprocess import visible_text_from_html, filter_string_for_keywords
 
 class Keyworder:
     """
@@ -29,7 +28,7 @@ class Keyworder:
             total_keywords += self.keyword_count[keyword]
             if (print_count > lines):
                 break
-        print ("%4d total keywords, %4d unique keywords" % (total_keywords, len(self.keyword_count)))
+        print ("%5d total keywords, %5d unique keywords" % (total_keywords, len(self.keyword_count)))
     
     def set_url(self, new_url):
         self.url = new_url
